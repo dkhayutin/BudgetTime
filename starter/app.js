@@ -75,7 +75,7 @@ var budgetController = (function () {
       if(data.totals.inc > 0) {
         data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
       } else {
-        data.percentage = -1; 
+        data.percentage = -1;
       }
 
     },
@@ -108,7 +108,11 @@ var UIController = (function () {
       inputValue: '.add__value',
       inputButton: '.add__btn',
       incomeContainer: '.income__list',
-      expensesContainer: '.expenses__list'
+      expensesContainer: '.expenses__list',
+      budgetLabel: ".budget__value",
+      incomeLabel: ".budget__income--value",
+      expenseLabel: ".budget__expenses--value",
+      percentageLabel: ".budget__expenses--percentage"
   };
 
   return {
@@ -154,6 +158,22 @@ var UIController = (function () {
         fieldsArr[0].focus();
       },
 
+      displayBudget: function(obj) {
+        document.querySelector(Domstrings.budgetLabel).textContent = obj.budget;
+        document.querySelector(Domstrings.incomeLabel).textContent = obj.totalInc;
+        document.querySelector(Domstrings.expenseLabel).textContent = obj.totalExp;
+        document.querySelector(Domstrings.percentageLabel).textContent = obj.percentage;
+
+        if(obj.percentage > 0 ) {
+          document.querySelector(Domstrings.percentageLabel).textContent = obj.percentage + '%';
+
+        } else {
+          document.querySelector(Domstrings.percentageLabel).textContent = '---'
+        }
+
+
+      },
+
       getDOMstrings: function () {
           return Domstrings;
       }
@@ -188,7 +208,7 @@ var controller = (function (budgetCtrl, UICntrl) {
     var budget = budgetCtrl.getBudget();
     // 3. Disblay the Budget
 
-    console.log(budget);
+    UICntrl.displayBudget(budget);
   }
 
   var ctrlAddItem = function () {
@@ -220,10 +240,16 @@ var controller = (function (budgetCtrl, UICntrl) {
   return  {
     init: function() {
       console.log('Application has started');
+      UICntrl.displayBudget({
+        budget: 0,
+        totalInc: 0,
+        totalExp: 0,
+        percentage: -1
+      });
       setupEventListeners();
     }
-  }
-
+  };
+  
 })(budgetController, UIController);
 
 controller.init();
